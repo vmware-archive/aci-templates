@@ -42,7 +42,7 @@ az group deployment create -g MyResourceGroup --template-file azuredeploy.json
 + **databaseUser**: WordPress' database name
 
 #### Output:
-+ **containerIPv4Address**: The WordPress IPv4 to access your site.
++ **containerIP**: The WordPress IP to access your site.
 
 ## Usage
 
