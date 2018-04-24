@@ -5,6 +5,7 @@ This repo contains all currently available Bitnami Azure Container Instance Temp
 Current Templates:
 
 * [Bitnami WordPress](wordpress)
+* [Bitnami Jenkins](jenkins)
 
 # License
 

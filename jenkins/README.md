@@ -17,9 +17,9 @@ This template creates a container group with a Jenkins site on a Container Insta
 
 The following resources are deployed as part of the solution
 
-+ **Azure Container Instance**: Azure Container Instance to host the WordPress site and the MySQL database.
++ **Azure Container Instance**: Azure Container Instance to host the Jenkins site.
 + **Azure Container Instance**: A [run-once](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-restart-policy#container-restart-policy) Azure Container Instance, where the az-cli is executed to create the file shares.
-+ **Storage Account**: Storage account for the file shares to store the WordPress site content and MySQL database.
++ **Storage Account**: Storage account for the file shares to store the Jenkins site content.
 + **File share**: Azure File shares to store Jenkins site content.
 
 ## Deployment steps
