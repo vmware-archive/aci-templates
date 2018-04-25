@@ -1,8 +1,8 @@
-# Bitnami Azure Container Instance Templates
+# Bitnami Azure Container Instance (ACI) Templates
 
-This repo contains all currently available Bitnami Azure Container Instance Templates.
+This repository contains all currently available Bitnami Azure Container Instance (ACI) Templates.
 
-Current Templates:
+# Current Templates
 
 * [Bitnami WordPress](wordpress)
 * [Bitnami Jenkins](jenkins)
