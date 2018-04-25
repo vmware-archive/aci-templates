@@ -2,12 +2,12 @@
 
 This repository contains all currently available Bitnami Azure Container Instance (ACI) Templates.
 
-# Current Templates
+## Current templates
 
 * [Bitnami WordPress](wordpress)
 * [Bitnami Jenkins](jenkins)
 
-# License
+## License
 
 Copyright (c) 2015-2018 Bitnami
 
