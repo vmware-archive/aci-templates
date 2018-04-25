@@ -54,7 +54,7 @@ The output will contain:
 
 + **containerURL**: The Jenkins URL to access your site.
 
-### Validate deployment and access WordPress
+### Validate deployment and access Jenkins
 
 Check if Jenkins has been initialized by running the command below:
 
