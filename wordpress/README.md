@@ -1,6 +1,8 @@
-# Create a Bitnami WordPress site on a Container Instance
+# Bitnami WordPress Azure Container Instance
 
-Create a WordPress site and a MySQL database on Azure Container Instances (ACI)
+## Quickstart
+
+Create a WordPress website and a MySQL database on Azure Container Instances (ACI):
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbitnami-labs%2Faci-templates%2Fmaster%2Fwordpress%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -9,27 +11,33 @@ Create a WordPress site and a MySQL database on Azure Container Instances (ACI)
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template creates a container group with a WordPress website and a MySQL database on a Container Instance. The WordPress site and MySQL database are persistently stored on an Azure Storage File Share.
+## Solution overview
+
+This template creates a container group with a WordPress website and a MySQL database on an Azure Container Instance. The WordPress website and MySQL database are persistently stored on Azure File Storage.
 
 `Tags: Azure Container Instance, Bitnami WordPress`
 
-## Solution overview and deployed resources
+## Deployed resources
 
-The following resources are deployed as part of the solution
+The following resources are deployed as part of the solution:
 
 + **Azure Container Instance**: Azure Container Instance to host the WordPress site and the MySQL database.
-+ **Azure Container Instance**: A [run-once](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-restart-policy#container-restart-policy) Azure Container Instance, where the az-cli is executed to create the file shares.
-+ **Storage Account**: Storage account for the file shares to store the WordPress site content and MySQL database.
-+ **File share**: Azure File shares to store WordPress site content and the MySQL database.
++ **Azure Container Instance**: A [run-once](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-restart-policy#container-restart-policy) Azure Container Instance, where the `az-cli` is executed to create the file shares.
++ **Storage Account**: A storage account for the Azure File shares to store the WordPress website content and MySQL database.
++ **File share**: Azure File shares to store the WordPress website content and the MySQL database.
 
 ## Deployment steps
+
+### Create a resource group and deployment
 
 ```bash
 az group create --name MyResourceGroup --location eastus
 az group deployment create -g MyResourceGroup --template-file azuredeploy.json
 ```
 
-#### Parameters:
+### Set deployment parameters
+
+The available parameters are:
 
 + **storageAccountType**: Storage Account Type
 + **storageAccountName**: Storage Account Name
@@ -42,19 +50,20 @@ az group deployment create -g MyResourceGroup --template-file azuredeploy.json
 + **databaseUser**: WordPress' Database User
 + **databaseUser**: WordPress' Database Name
 
-In order to set the parameters, modify the *azuredeploy.parameters.json* with your desired values and run the commands below:
+In order to set the parameters, modify the `azuredeploy.parameters.json` file with your desired values and run the commands below:
 
 ```bash
 PARAMETERS_JSON=$( cat azuredeploy.parameters.json | jq -c '.parameters' )
 az group deployment create -g MyResourceGroup --template-file azuredeploy.json --parameters "$PARAMETERS_JSON"
 ```
 
-#### Output:
+The output will contain:
+
 + **containerURL**: The WordPress URL to access your site.
 
-## Usage
+### Validate deployment and access WordPress
 
-Use the browser to access the WordPress site IP from the deployment output once WP is initialized. You can check if it has been initialized by running the command below:
+Check if WordPress has been initialized by running the command below:
 
 ```bash
 az container logs --name wordpress-container-instance -g MyResourceGroup --container-name wordpress --follow
@@ -66,6 +75,8 @@ Wait until the line below appears:
 INFO  wordpress successfully initialized
 ```
 
+Use the browser to access the WordPress website IP address from the deployment output once WordPress is initialized. 
+
 ## Notes
 
-Azure Container Instance is available in selected [locations](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-quotas#region-availability). Please use one of the available location for Azure Container Instance resource.
+Azure Container Instances are available in selected [locations](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-quotas#region-availability). Please use one of the available locations for Azure Container Instance resources.
