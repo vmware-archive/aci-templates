@@ -22,7 +22,7 @@ This template creates a container group with a WordPress website and a MySQL dat
 The following resources are deployed as part of the solution:
 
 + **Azure Container Instance**: Azure Container Instance to host the WordPress site and the MySQL database.
-+ **Azure Container Instance**: A [run-once](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-restart-policy#container-restart-policy) Azure Container Instance, where the `az-cli` is executed to create the file shares.
++ **Azure Container Instance**: A [run-once](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-restart-policy#container-restart-policy) Azure Container Instance, where the `az` CLI is executed to create the file shares.
 + **Storage Account**: A storage account for the Azure File shares to store the WordPress website content and MySQL database.
 + **File share**: Azure File shares to store the WordPress website content and the MySQL database.
 
