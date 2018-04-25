@@ -30,21 +30,28 @@ az group deployment create -g MyResourceGroup --template-file azuredeploy.json
 ```
 
 #### Parameters:
+
 + **storageAccountType**: Storage Account Type
 + **storageAccountName**: Storage Account Name
 + **jenkinsUsername**: Jenkins Admin User
 + **jenkinsPassword**: Jenkins Admin Password
 
+In order to set the parameters, modify the *azuredeploy.parameters.json* with your desired values and run the commands below:
+
+```bash
+PARAMETERS_JSON=$( cat azuredeploy.parameters.json | jq -c '.parameters' )
+az group deployment create -g MyResourceGroup --template-file azuredeploy.json --parameters "$PARAMETERS_JSON"
+```
+
 #### Output:
-+ **containerIP**: The Jenkins IP to access your site.
-+ **containerPort**: The Jenkins Port to access your site.
++ **containerURL**: The Jenkins URL to access your site.
 
 ## Usage
 
 Use browser to access the site IP from deployment output once Jenkins is initialized. You can check if it's been initialized by running:
 
 ```bash
-az container logs --name jenkins-container-group -g MyResourceGroup --container-name jenkins --follow
+az container logs --name jenkins-container-instance -g MyResourceGroup --container-name jenkins --follow
 ```
 
 Wait until the line below appears:

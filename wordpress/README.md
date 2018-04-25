@@ -30,6 +30,7 @@ az group deployment create -g MyResourceGroup --template-file azuredeploy.json
 ```
 
 #### Parameters:
+
 + **storageAccountType**: Storage Account Type
 + **storageAccountName**: Storage Account Name
 + **wordpressBlogName**: WordPress Blog Name
@@ -41,15 +42,22 @@ az group deployment create -g MyResourceGroup --template-file azuredeploy.json
 + **databaseUser**: WordPress' Database User
 + **databaseUser**: WordPress' Database Name
 
+In order to set the parameters, modify the *azuredeploy.parameters.json* with your desired values and run the commands below:
+
+```bash
+PARAMETERS_JSON=$( cat azuredeploy.parameters.json | jq -c '.parameters' )
+az group deployment create -g MyResourceGroup --template-file azuredeploy.json --parameters "$PARAMETERS_JSON"
+```
+
 #### Output:
-+ **containerIP**: The WordPress public IP address.
++ **containerURL**: The WordPress URL to access your site.
 
 ## Usage
 
 Use the browser to access the WordPress site IP from the deployment output once WP is initialized. You can check if it has been initialized by running the command below:
 
 ```bash
-az container logs --name wordpress-container-group -g MyResourceGroup --container-name wordpress --follow
+az container logs --name wordpress-container-instance -g MyResourceGroup --container-name wordpress --follow
 ```
 
 Wait until the line below appears:

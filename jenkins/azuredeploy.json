@@ -37,11 +37,13 @@
     }
   },
   "variables": {
-    "shareContainerGroupName": "jenkins-createshare-containerinstance",
+    "shareContainerGroupName": "createshare-container-instance",
+    "jenkinsContainerGroupName": "jenkins-container-instance",
     "jenkinsShareName": "jenkins-share",
-    "cpuCores": "0.5",
-    "memoryInGb": "0.7",
-    "jenkinsContainerName": "jenkins"
+    "jenkinsContainerName": "jenkins",
+    "jenkinsImageTag": "latest",
+    "cpuCores": "2",
+    "memoryInGb": "3"
   },
   "resources": [
     {
@@ -89,8 +91,8 @@
                ],
                "resources": {
                  "requests": {
-                   "cpu": "[variables('cpuCores')]",
-                   "memoryInGb": "[variables('memoryInGb')]"
+                   "cpu": "0.5",
+                   "memoryInGb": "0.7"
                  }
                }
              }
@@ -102,7 +104,7 @@
      },
      {
        "type": "Microsoft.ContainerInstance/containerGroups",
-       "name": "jenkins-container-group",
+       "name": "[variables('jenkinsContainerGroupName')]",
        "apiVersion": "2017-10-01-preview",
        "location": "[resourceGroup().location]",
        "dependsOn": [
@@ -113,11 +115,11 @@
            {
              "name": "[variables('jenkinsContainerName')]",
              "properties": {
-               "image": "bitnami/jenkins",
+               "image": "[concat('bitnami/jenkins:', variables('jenkinsImageTag'))]",
                "resources": {
                  "requests": {
-                   "cpu": 1,
-                   "memoryInGb": 2
+                   "cpu": "[variables('cpuCores')]",
+                   "memoryInGb": "[variables('memoryInGb')]"
                  }
                },
                "ports": [
@@ -175,13 +177,9 @@
      }
    ],
    "outputs": {
-     "containerIP": {
+     "containerURL": {
        "type": "string",
-       "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', 'jenkins-container-group')).ipAddress.ip]"
-     },
-     "containerPort": {
-       "type": "string",
-       "value": "8080"
+       "value": "[concat('http://', reference(resourceId('Microsoft.ContainerInstance/containerGroups/', variables('jenkinsContainerGroupName'))).ipAddress.ip, ':8080')]"
      }
    }
 }

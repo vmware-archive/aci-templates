@@ -79,13 +79,16 @@
     }
   },
   "variables": {
-    "shareContainerGroupName": "createshare-containerinstance",
+    "shareContainerGroupName": "createshare-container-instance",
     "wordpressShareName": "wordpress-share",
     "mysqlShareName": "mysql-share",
-    "cpuCores": "0.5",
-    "memoryInGb": "0.7",
+    "wordpressContainerGroupName": "wordpress-container-instance",
     "wordpressContainerName": "wordpress",
-    "mysqlContainerName": "mysql"
+    "mysqlContainerName": "mysql",
+    "wordpressImageTag": "latest",
+    "mysqlImageTag": "latest",
+    "cpuCores": "2",
+    "memoryInGb": "2"
   },
   "resources": [
     {
@@ -133,8 +136,8 @@
                ],
                "resources": {
                  "requests": {
-                   "cpu": "[variables('cpuCores')]",
-                   "memoryInGb": "[variables('memoryInGb')]"
+                   "cpu": "0.5",
+                   "memoryInGb": "0.7"
                  }
                }
              }
@@ -163,8 +166,8 @@
                ],
                "resources": {
                  "requests": {
-                   "cpu": "[variables('cpuCores')]",
-                   "memoryInGb": "[variables('memoryInGb')]"
+                   "cpu": "0.5",
+                   "memoryInGb": "0.7"
                  }
                }
              }
@@ -176,7 +179,7 @@
      },
      {
        "type": "Microsoft.ContainerInstance/containerGroups",
-       "name": "wordpress-container-group",
+       "name": "[variables('wordpressContainerGroupName')]",
        "apiVersion": "2017-10-01-preview",
        "location": "[resourceGroup().location]",
        "dependsOn": [
@@ -187,11 +190,11 @@
            {
              "name": "[variables('mysqlContainerName')]",
              "properties": {
-               "image": "bitnami/mysql",
+               "image": "[concat('bitnami/mysql:', variables('mysqlImageTag'))]",
                "resources": {
                  "requests": {
-                   "cpu": 1,
-                   "memoryInGb": 1.5
+                   "cpu": "[variables('cpuCores')]",
+                   "memoryInGb": "[variables('memoryInGb')]"
                  }
                },
                "ports": [
@@ -224,11 +227,11 @@
            {
              "name": "[variables('wordpressContainerName')]",
              "properties": {
-               "image": "bitnami/wordpress",
+               "image": "[concat('bitnami/wordpress:', variables('wordpressImageTag'))]",
                "resources": {
                  "requests": {
-                   "cpu": 1,
-                   "memoryInGb": 1.5
+                   "cpu": "[variables('cpuCores')]",
+                   "memoryInGb": "[variables('memoryInGb')]"
                  }
                },
                "ports": [
@@ -330,9 +333,9 @@
      }
    ],
    "outputs": {
-     "containerIP": {
+     "containerURL": {
        "type": "string",
-       "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', 'wordpress-container-group')).ipAddress.ip]"
+       "value": "[concat('http://', reference(resourceId('Microsoft.ContainerInstance/containerGroups/', variables('wordpressContainerGroupName'))).ipAddress.ip, ':80')]"
      }
    }
 }
