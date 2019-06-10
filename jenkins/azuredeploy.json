@@ -60,126 +60,126 @@
     {
       "name": "[variables('shareContainerGroupName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
-      "apiVersion": "2018-02-01-preview",
+      "apiVersion": "2018-10-01",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
-       ],
-       "properties": {
-         "containers": [
-           {
-             "name": "[variables('jenkinsShareName')]",
-             "properties": {
-               "image": "microsoft/azure-cli",
-               "command": [
-                 "az",
-                 "storage",
-                 "share",
-                 "create",
-                 "--name",
-                 "[variables('jenkinsShareName')]"
-               ],
-               "environmentVariables": [
-                 {
-                   "name": "AZURE_STORAGE_KEY",
-                   "value": "[listKeys(parameters('storageAccountName'),'2017-10-01').keys[0].value]"
-                 },
-                 {
-                   "name": "AZURE_STORAGE_ACCOUNT",
-                   "value": "[parameters('storageAccountName')]"
-                 }
-               ],
-               "resources": {
-                 "requests": {
-                   "cpu": "0.5",
-                   "memoryInGb": "0.7"
-                 }
-               }
-             }
-           }
-         ],
-         "restartPolicy": "OnFailure",
-         "osType": "Linux"
-       }
-     },
-     {
-       "type": "Microsoft.ContainerInstance/containerGroups",
-       "name": "[variables('jenkinsContainerGroupName')]",
-       "apiVersion": "2017-10-01-preview",
-       "location": "[resourceGroup().location]",
-       "dependsOn": [
-         "[concat('Microsoft.ContainerInstance/containerGroups/', variables('shareContainerGroupName'))]"
-       ],
-       "properties": {
-         "containers": [
-           {
-             "name": "[variables('jenkinsContainerName')]",
-             "properties": {
-               "image": "[concat('bitnami/jenkins:', variables('jenkinsImageTag'))]",
-               "resources": {
-                 "requests": {
-                   "cpu": "[variables('cpuCores')]",
-                   "memoryInGb": "[variables('memoryInGb')]"
-                 }
-               },
-               "ports": [
-                 {
-                   "port": 8080
-                 },
-                 {
-                   "port": 8443
-                 }
-               ],
-               "volumeMounts": [
-                  {
-                   "name": "jenkins-data",
-                   "mountPath": "/bitnami/jenkins"
-                 }
-               ],
-               "environmentVariables": [
-                 {
-                   "name": "JENKINS_USERNAME",
-                   "value": "[parameters('jenkinsUsername')]"
-                 },
-                 {
-                   "name": "JENKINS_PASSWORD",
-                   "value": "[parameters('jenkinsPassword')]"
-                 }
-               ]
-             }
-           }
-         ],
-         "osType": "Linux",
-         "ipAddress": {
-           "type": "Public",
-           "ports": [
-             {
-               "protocol": "tcp",
-                "port": "8080"
-             },
-             {
-               "protocol": "tcp",
-               "port": "8443"
-             }
-           ]
-         },
-         "volumes": [
-           {
-             "azureFile": {
-             "shareName": "[variables('jenkinsShareName')]",
-             "storageAccountKey": "[listKeys(parameters('storageAccountName'),'2017-10-01').keys[0].value]",
-             "storageAccountName": "[parameters('storageAccountName')]"
-             },
-             "name": "jenkins-data"
-           }
-         ]
-       }
-     }
-   ],
-   "outputs": {
-     "containerURL": {
-       "type": "string",
-       "value": "[concat('http://', reference(resourceId('Microsoft.ContainerInstance/containerGroups/', variables('jenkinsContainerGroupName'))).ipAddress.ip, ':8080')]"
-     }
-   }
+      ],
+      "properties": {
+        "containers": [
+          {
+            "name": "[variables('jenkinsShareName')]",
+            "properties": {
+              "image": "microsoft/azure-cli",
+              "command": [
+                "az",
+                "storage",
+                "share",
+                "create",
+                "--name",
+                "[variables('jenkinsShareName')]"
+              ],
+              "environmentVariables": [
+                {
+                  "name": "AZURE_STORAGE_KEY",
+                  "value": "[listKeys(parameters('storageAccountName'),'2017-10-01').keys[0].value]"
+                },
+                {
+                  "name": "AZURE_STORAGE_ACCOUNT",
+                  "value": "[parameters('storageAccountName')]"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": "0.5",
+                  "memoryInGb": "0.7"
+                }
+              }
+            }
+          }
+        ],
+        "restartPolicy": "OnFailure",
+        "osType": "Linux"
+      }
+    },
+    {
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "name": "[variables('jenkinsContainerGroupName')]",
+      "apiVersion": "2018-10-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.ContainerInstance/containerGroups/', variables('shareContainerGroupName'))]"
+      ],
+      "properties": {
+        "containers": [
+          {
+            "name": "[variables('jenkinsContainerName')]",
+            "properties": {
+              "image": "[concat('bitnami/jenkins:', variables('jenkinsImageTag'))]",
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('cpuCores')]",
+                  "memoryInGb": "[variables('memoryInGb')]"
+                }
+              },
+              "ports": [
+                {
+                  "port": 8080
+                },
+                {
+                  "port": 8443
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "jenkins-data",
+                  "mountPath": "/bitnami/jenkins"
+                }
+              ],
+              "environmentVariables": [
+                {
+                  "name": "JENKINS_USERNAME",
+                  "value": "[parameters('jenkinsUsername')]"
+                },
+                {
+                  "name": "JENKINS_PASSWORD",
+                  "value": "[parameters('jenkinsPassword')]"
+                }
+              ]
+            }
+          }
+        ],
+        "osType": "Linux",
+        "ipAddress": {
+          "type": "Public",
+          "ports": [
+            {
+              "protocol": "tcp",
+              "port": "8080"
+            },
+            {
+              "protocol": "tcp",
+              "port": "8443"
+            }
+          ]
+        },
+        "volumes": [
+          {
+            "azureFile": {
+              "shareName": "[variables('jenkinsShareName')]",
+              "storageAccountKey": "[listKeys(parameters('storageAccountName'),'2017-10-01').keys[0].value]",
+              "storageAccountName": "[parameters('storageAccountName')]"
+            },
+            "name": "jenkins-data"
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "containerURL": {
+      "type": "string",
+      "value": "[concat('http://', reference(resourceId('Microsoft.ContainerInstance/containerGroups/', variables('jenkinsContainerGroupName'))).ipAddress.ip, ':8080')]"
+    }
+  }
 }
